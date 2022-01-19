@@ -1,3 +1,8 @@
+Running
+
+    Use 'make build' for running app
+    Use 'make test' for running tests
+
 ### Контекст задачи:
 
 - у нас есть пользователи от которых мы получаем некоторые данные
@@ -81,9 +86,3 @@
 - расчет производится в фоновых процессах через очереди (не блокирует АПИ)
 - все это дело покрыто тестами
 - есть авторизация через токены
-
-
-Running
-
-    Use 'make build' for running app
-    Use 'make test' for running tests
