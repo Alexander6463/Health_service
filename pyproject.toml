@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "health_service"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.72.0"
+alembic = "^1.7.5"
+uvicorn = "^0.17.0"
+psycopg2 = "^2.9.3"
+scipy = "1.6.0"
+numpy = "1.21.0"
+python-jose = "^3.3.0"
+
+[tool.poetry.dev-dependencies]
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
