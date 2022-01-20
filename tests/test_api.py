@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -27,7 +28,12 @@ app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
 
 
-def test_create_calculate():
+@pytest.fixture
+def token():
+    return client.get("/token").json
+
+
+def test_create_calculate(token):
     data = HealthData(
         user_id=1,
         data=DataWithType(
@@ -45,12 +51,14 @@ def test_create_calculate():
             ],
         ),
     )
-    response = client.post("/calculate", data=data.json())
+    response = client.post(
+        "/calculate", data=data.json(), headers={"Authorization": f"Bearer {token()}"}
+    )
     assert response.status_code == 200
     assert response.content == b'{"message":"Task sent in the background"}'
 
 
-def test_create_calculate_with_bad_data():
+def test_create_calculate_with_bad_data(token):
     data = HealthData(
         user_id=2,
         data=DataWithType(
@@ -68,14 +76,17 @@ def test_create_calculate_with_bad_data():
             ],
         ),
     )
-    response = client.post("/calculate", data=data.json())
+    response = client.post(
+        "/calculate", data=data.json(), headers={"Authorization": f"Bearer {token()}"}
+    )
     assert response.status_code == 200
     assert response.content == b'{"message":"Task sent in the background"}'
 
 
-def test_get_calculate():
+def test_get_calculate(token):
     response = client.get(
-        "/correlation?user_id=1&&y_data_type=test_y&&x_data_type=test_x"
+        "/correlation?user_id=1&&y_data_type=test_y&&x_data_type=test_x",
+        headers={"Authorization": f"Bearer {token()}"},
     )
     result = CorrelationSchema(**json.loads(response.text))
     assert response.status_code == 200
@@ -86,9 +97,10 @@ def test_get_calculate():
     assert round(result.correlation.p_value * 10 ** 8, ndigits=2) == 1.34
 
 
-def test_get_calculate_with_pearson_null():
+def test_get_calculate_with_pearson_null(token):
     response = client.get(
-        "/correlation?user_id=2&&y_data_type=test_y&&x_data_type=test_x"
+        "/correlation?user_id=2&&y_data_type=test_y&&x_data_type=test_x",
+        headers={"Authorization": f"Bearer {token()}"},
     )
     result = CorrelationSchema(**json.loads(response.text))
     assert response.status_code == 200

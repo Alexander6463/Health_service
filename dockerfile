@@ -22,4 +22,4 @@ FROM base as test
 COPY tests tests
 RUN pip install poetry
 RUN poetry install
-CMD poetry run pytest --cov=app tests/
+CMD poetry run pytest --cov=. tests/

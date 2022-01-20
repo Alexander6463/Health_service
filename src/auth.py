@@ -11,7 +11,6 @@ security = HTTPBearer()
 
 SECRET_KEY = os.environ.get("SECRET_KEY", default="SECRET")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 def has_access(credentials: HTTPBasicCredentials = Depends(security)) -> None:
@@ -37,7 +36,3 @@ def create_access_token(expires_delta: Optional[timedelta] = None) -> str:
     to_encode = {"exp": expire}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-if __name__ == "__main__":
-    jwt.decode("asdf", SECRET_KEY, algorithms=[ALGORITHM])

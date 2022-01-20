@@ -9,12 +9,8 @@ from sqlalchemy.orm import Session
 from db.base import get_db
 from db.models import Correlation
 from src.auth import create_access_token
-from src.schemas import (
-    CalculateCreateResponse,
-    CorrelationSchema,
-    CorrelationWrongResponse,
-    HealthData,
-)
+from src.schemas import (CalculateCreateResponse, CorrelationSchema,
+                         CorrelationWrongResponse, HealthData)
 from src.utils import calculate
 
 router = APIRouter()
@@ -83,5 +79,5 @@ def get_correlation_data(
 
 
 @auth_router.get("/token")
-def get_token(expires_delta: timedelta):
+def get_token(expires_delta: timedelta = None):
     return create_access_token(expires_delta=expires_delta)
